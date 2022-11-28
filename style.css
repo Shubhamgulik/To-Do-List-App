@@ -43,7 +43,7 @@
   
   #list label:before {
     content:'';
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
     background-color: transparent;
     border: 2px solid #0079bf;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
@@ -101,21 +101,24 @@
 
   #snack-bar{
     position: absolute;
-    top: 5%;
-    right: 3%;
+    top: 3rem;
+    right: 3rem;
+    /* top: 5%;
+    right: 3%; */
     border: 2px;
-    border-radius: 10px;
+    border-radius: 5px;
     color: rgb(193, 64, 64);
     background-color: rgb(193, 232, 241);
     width: 15rem;
     height: 3rem;
     padding: 0.5rem;
     font-size: larger;
-    transition: 0.5s ease-in;
+    transition: 1s ease-out;
   }
   .blank{
     opacity: 0;
   }
   .show{
+    transform: translateX(2);
     opacity: 1;
   }
