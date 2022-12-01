@@ -2,61 +2,114 @@ const toDoList = (function(){
         var tasks = [];
         const input = document.querySelector(".add-task");
         const taskList = document.getElementById("list");
+
+        // Three Counters: Total | Pending | Completed
         const taskCounter = document.getElementById("total-tasks");
+        const pendingCounter = document.getElementById("pending-tasks");
+        const completeCounter = document.getElementById("completed-tasks");
+        let pending = 0,complete = 0;
+        
+        // Notification
         const notify = document.getElementById("snack-bar");
 
-        // Fetch tasks from API 
-        async function fetchToDos(){
-            // fetch('https://jsonplaceholder.typicode.com/todos')
-            //     .then(function (response){
-            //         return response.json();
-            //     })
-            //     .then(function (data){
-            //         tasks = data.slice(0,10);
-            //         renderList();
-            //     })
-            //     .catch(function (error){
-            //         showNotification(error);
-            //     })
-            try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-                const data = await response.json();
-                tasks = data.slice(0,10);
-                renderList();
-            } catch (error) {
-                showNotification(error);
-            }
+        //Empty task list
+        function showEmpty(){
+            taskList.innerHTML = '';
+            let listElement = document.createElement('li');
+            let newHtml = ``;
+            newHtml += `You Dont have any task here`;
+            
+            listElement.innerHTML = newHtml;
+            taskList.append(listElement);
         }
+        
         // Add Tasks to DOM
         function addToDOM(task){
             let listElement = document.createElement('li');
             let newHtml = ``;
             newHtml += `<input type="checkbox" id="${task.id}" ${task.completed ? "checked" : ""} class="custom-checkbox">`;
             newHtml += `<label for="${task.id}">${task.title}</label>`;
-            newHtml += `<img src="images/84-842915_delete-icon-png-red.png" class="delete" data-id="${task.id}" />`;
+            newHtml += `<img src="images/cross.png" class="delete" data-id="${task.id}" />`;
+    
             listElement.innerHTML = newHtml;
             taskList.append(listElement);
+            
             return;
         }
+        //Update counts of Pending and Completed
+        function updateCount(){
+            complete = 0;
+            pending = 0;
+            for(let task of tasks){
+                // console.log("status : "+task.completed)
+                if(task.completed) complete++;
+                else pending++;
+            }
+            console.log(complete+" "+pending);
+        }
+        // Set status of all tasks to completed
+        function setToComplete(){
+            for(task of tasks){
+                task.completed = true;
+            }
+            updateCount();
+        }
         // Render All Tasks present
-        function renderList(){
+        function renderList(taskCategory){
+            updateCount();
+            
             taskList.innerHTML = '';
-            for(let singleTask of tasks){
-            addToDOM(singleTask);
+           
+            if(tasks.length === 0){
+                showEmpty();
+                return;
+            }
+            if(taskCategory === '' || taskCategory === 'all'){
+                for(let singleTask of tasks){
+                    addToDOM(singleTask);
+                }
+            }else if(taskCategory === 'pending'){
+                for(let singleTask of tasks){
+                    if(singleTask.completed == false) addToDOM(singleTask);
+                }
+            }else if(taskCategory === 'complete'){
+                for(let singleTask of tasks){
+                    if(singleTask.completed == true) addToDOM(singleTask);
+                }
+            }else if(taskCategory === 'clear'){
+                tasks = [];
+                pending = 0;
+                complete = 0;
+                showEmpty();
+            }else if(taskCategory === 'completeAll'){
+                setToComplete();
+                for(let singleTask of tasks){
+                    addToDOM(singleTask);
+                }
             }
             // for(let singleTask of tasks){
             //     if(!singleTask.completed) addToDOM(singleTask);
             // }
             taskCounter.innerHTML = `Total tasks: ${tasks.length}`
+            pendingCounter.innerHTML = `Pending: ${pending}`
+            completeCounter.innerHTML = `Complete: ${complete}`
             return;
         }
         // Toggle Task to Completed or Incomplete
         function toggleTask(taskId){
                 for(let task of tasks){
                     if(task.id === Number(taskId)){
+                        // if(task.completed){
+                        //     pending += 1;
+                        //     if(complete != 0) complete -= 1;
+                        // }else{
+                        //     if(pending != 0) pending -= 1;
+                        //     complete += 1;
+                        // }
                         task.completed = !task.completed;
-                        renderList();
-                        
+                        console.log(tasks)
+                        updateCount();
+                        renderList('all');
                         return;
                     }
                 }
@@ -67,7 +120,8 @@ const toDoList = (function(){
         function deleteTask(taskId){
             var newTasks = tasks.filter((task) => task.id !== Number(taskId));
             tasks = newTasks;
-            renderList();
+            updateCount();
+            renderList('all');
             // console.log(tasks.length);
             taskCounter.innerHTML = `Total tasks: ${tasks.length}`
             return;
@@ -101,8 +155,11 @@ const toDoList = (function(){
             //         showNotification(error);
             //     })
             tasks.push(task);
+            console.log(tasks);
             showNotification("Task added");
-            renderList();
+            // pending += 1;
+            updateCount();
+            renderList('all');
             taskCounter.innerHTML = `Total tasks: ${tasks.length}`
             return;
         }
@@ -144,20 +201,44 @@ const toDoList = (function(){
         
             if(target.className === 'delete'){
                 const taskId = target.dataset.id;
+                console.log(target.dataset);
                 deleteTask(taskId);
                 showNotification("Task deleted");
             }else if(target.className === 'custom-checkbox'){
+               
                 const taskId = target.id;
                 toggleTask(taskId);
                 showNotification("Toggled successfully")
             }
+            if(target.className === 'action all'){
+                // console.log("all clicked")
+                renderList('all');
+            }
+            if(target.className === 'action pending'){
+                // console.log("Pending clicked")
+                renderList('pending');
+            }
+            if(target.className === 'action complete'){
+                // console.log("Complete clicked")
+                renderList('complete');
+            }
+            if(target.className === 'action clear'){
+                // console.log("Clear clicked")
+                renderList('clear');
+            }
+            if(target.className === 'action completeAll'){
+                // console.log("Clear clicked")
+                renderList('completeAll');
+            }
+            
         
         
         
         }
         // initiallizeApp();
         function initiallizeApp(){
-            fetchToDos();
+            // fetchToDos();
+            showEmpty();
             input.addEventListener("keyup",getTask);
             document.addEventListener("click",allEvents);
         }
