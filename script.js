@@ -64,7 +64,8 @@ const toDoList = (function(){
                 showEmpty();
                 return;
             }
-            if(taskCategory === '' || taskCategory === 'all'){
+            //taskCategory === '' || 
+            if(taskCategory === 'all'){
                 for(let singleTask of tasks){
                     addToDOM(singleTask);
                 }
@@ -175,6 +176,7 @@ const toDoList = (function(){
         }
         // Enter Key Event Listener
         function getTask(e){
+            console.log(e.key)
             if(e.key === 'Enter'){
                 const userInput = e.target.value;
                 input.value = "";
@@ -229,6 +231,23 @@ const toDoList = (function(){
             if(target.className === 'action completeAll'){
                 // console.log("Clear clicked")
                 renderList('completeAll');
+            }
+            if(target.id === "add-button"){
+                const userInput = input.value;
+                input.value = "";
+
+                if(!userInput){
+                    showNotification("Task Empty..");
+                    return;
+                }
+
+                const task = {
+                    title : userInput,
+                    id: Date.now(),
+                    completed: false,
+                }
+
+                addTask(task);
             }
             
         

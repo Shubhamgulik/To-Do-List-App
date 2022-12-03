@@ -10,6 +10,7 @@
     margin: 0 auto;
   }
 
+  /* Completed / Pending / Show all tasks  */
   .status-container .status{
     display: flex;
     flex-direction: row;
@@ -20,19 +21,20 @@
     padding: 10px;
     cursor: pointer;
   }
+  
+  /* Clear All Tasks Button */
   .clear{
     color: white;
     position: absolute;
     right: 0%;
     text-align: right;
-    background-image: linear-gradient(to right, #387dfe, #4ab0ff);
-    
+    background-image: linear-gradient(to right, #387dfe, #4ab0ff); 
   }
   .clear:hover{
     background-color: #4ab0ff;
   }
 
-
+ /* Unordered List to show all tasks */
   ul {
     list-style-type: none;
     margin: 0;
@@ -71,6 +73,8 @@
     cursor: pointer;
   }
   
+  
+  /* Adding checkbox styling  */
   #list label:before {
     content:'';
     /* -webkit-appearance: none; */
@@ -102,6 +106,9 @@
   #list input:checked + label {
     text-decoration: line-through;
   }
+
+
+/* Task Delete Button  */
   .delete {
       height: 30px;
       padding: 5px 0px;
@@ -116,6 +123,21 @@
   h1 {
     text-align: center;
   }
+
+  /* Input Type Text for adding tasks */
+   div{
+    position: relative;
+  } 
+  .form-inputs i{
+    position: absolute;
+    top: 35%;
+    right: 5%;
+    transition: 0.1s ease-in-out;
+  }
+  .form-inputs i:hover{
+    transform: scale(1.5);
+  }
+  
   .add-task {
       width: 100%;
       outline: none;
@@ -124,21 +146,21 @@
       border: 1px solid #f3f3f3;
       margin-bottom: 3px;
       border: 2px solid #999999;
-    border-radius: 10px;
+      border-radius: 10px;
   }
+
   #container span {
     margin-bottom: 20px;
     font-size: 13px;
-      margin-left: 2px;
-      color: white;
+    margin-left: 2px;
+    color: white;
   }
 
+  /* Notification for different actions */
   #snack-bar{
     position: fixed;
     top: 3rem;
     right: 3rem;
-    /* top: 5%;
-    right: 3%; */
     border: 2px;
     border-radius: 5px;
     color: rgb(193, 64, 64);
